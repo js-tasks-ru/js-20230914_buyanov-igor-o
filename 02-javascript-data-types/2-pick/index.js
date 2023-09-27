@@ -6,11 +6,11 @@
  */
 export const pick = (obj, ...fields) => {
 
-  let new_obj = []
+  const new_obj = {}
   
   for (const [key, value] of Object.entries(obj)) {
-    if (fields.includes(key)) new_obj.push([key, value])
+    if (fields.includes(key)) new_obj[key] = value
   }
-  return Object.fromEntries(new_obj)
+  return new_obj
 
 };

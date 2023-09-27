@@ -7,17 +7,13 @@
 
 
 export function sortStrings(arr, param = 'asc') {
-    let new_arr = arr.map((x) => x);
+    let new_arr = [...arr]
 
     if (param === "asc") 
     {
         return new_arr.sort((a,b) => a.localeCompare(b, ["ru", "en"], {"caseFirst": "upper"}))
     }
-    else if ((param === "desc")){
+    else {
         return new_arr.sort((a,b) => a.localeCompare(b, ["ru", "en"]) * -1)
     } 
-    else{
-        console.log("Only \'desc\' and \'asc\' are allowed as a param. Return Nan")
-        return NaN
-    }
 }
