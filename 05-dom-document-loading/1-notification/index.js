@@ -7,7 +7,7 @@ export default class NotificationMessage {
         this.type = config?.type
 
         this.element = document.createElement("div")
-        NotificationMessage.existingInstance = this
+        
         this.insert(this.element)
     }
 
@@ -37,10 +37,12 @@ export default class NotificationMessage {
     }
 
     show(customDivElement){
+        
         if(NotificationMessage.existingInstance){
             NotificationMessage.existingInstance.destroy()
         }
-
+        NotificationMessage.existingInstance = this
+        
         if(customDivElement){
             this.insert(customDivElement)
             this.element = customDivElement
