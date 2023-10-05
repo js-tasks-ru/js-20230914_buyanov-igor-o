@@ -5,9 +5,7 @@ export default class NotificationMessage {
         this.text = text
         this.duration = config?.duration
         this.type = config?.type
-        if(NotificationMessage.existingInstance){
-            NotificationMessage.existingInstance.destroy()
-        }
+
         this.element = document.createElement("div")
         NotificationMessage.existingInstance = this
         this.insert(this.element)
@@ -39,6 +37,9 @@ export default class NotificationMessage {
     }
 
     show(customDivElement){
+        if(NotificationMessage.existingInstance){
+            NotificationMessage.existingInstance.destroy()
+        }
 
         if(customDivElement){
             this.insert(customDivElement)
@@ -54,7 +55,7 @@ export default class NotificationMessage {
 
     destroy(){
         this.remove()
-        this.timer = null
+        this.timer = clearTimeout(this.timer)
     }
 
 }
