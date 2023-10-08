@@ -43,6 +43,7 @@ function sortNumber(arr, field, param='asc'){
   }
 }
 
+
 export default class SortableTable {
   constructor(headersConfig, {
     data = [],
@@ -167,4 +168,3 @@ export default class SortableTable {
     this.remove()
   }
 }
-
