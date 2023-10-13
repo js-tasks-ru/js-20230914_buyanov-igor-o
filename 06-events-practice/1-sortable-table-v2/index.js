@@ -67,13 +67,11 @@ export default class SortableTable {
     
     this.subElements = {"header": this.createHeaderElemet(),
                         "body": this.createBodyTableElement()};
-    console.log(this.subElements.body.textContent)
     this.currentSortedHeader = undefined;
     this.sort(sorted.id, sorted.order)
   }
 
   sort(field, method){
-    //console.log("from sort: ", field, method,)
     if(this.sortTypeMap[field] == "string"){
       sortStrings(this.data, field, method)
     }
@@ -85,7 +83,6 @@ export default class SortableTable {
     
     const cellIndex = this.headerConfig.findIndex(obj => obj.id === field);
     const headerCell = this.subElements.header.children[cellIndex]
-    //const { body } = this.subElements;
     
     if(this.currentSortedHeader){
       this.currentSortedHeader.removeAttribute("data-order")
@@ -123,7 +120,7 @@ export default class SortableTable {
   titleClickHandler = e => {
     
     if(!e.currentTarget.dataset.order){
-      this.sort(e.currentTarget.dataset.id, "asc")
+      this.sort(e.currentTarget.dataset.id, "desc")
     } else if(e.currentTarget.dataset.order == "desc"){
       this.sort(e.currentTarget.dataset.id, "asc")
     } else{
