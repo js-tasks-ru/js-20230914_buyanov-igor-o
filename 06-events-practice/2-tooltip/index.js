@@ -6,18 +6,17 @@ class Tooltip {
      return Tooltip.instance
     }
     Tooltip.instance = this;
-    this.bodyElement = document.getElementsByTagName("body")[0]
     
   }
 
   pointeroverHandler = e =>{
-    if (e.target.dataset.tooltip != undefined) {
+    if (e.target.dataset.tooltip) {
       this.render(e.target.dataset.tooltip)
     }
   }
 
   pointeroutHander = e => {
-    if (e.target.dataset.tooltip != undefined) {
+    if (e.target.dataset.tooltip) {
       this.remove()
     }
   }
@@ -26,7 +25,7 @@ class Tooltip {
     this.element = document.createElement("div")
     this.element.innerHTML = str;
     this.element.className = "tooltip"
-    this.bodyElement.append(this.element)
+    document.body.append(this.element)
 
   }
 
@@ -36,15 +35,15 @@ class Tooltip {
 
   initialize () {
     
-    this.bodyElement.addEventListener("pointerover", this.pointeroverHandler)
-    this.bodyElement.addEventListener("pointerout", this.pointeroutHander)
+    document.body.addEventListener("pointerover", this.pointeroverHandler)
+    document.body.addEventListener("pointerout", this.pointeroutHander)
 
   }
 
   destroy(){
-    this.element.remove()
-    this.bodyElement.removeEventListener("pointerover", this.pointeroverHandler)
-    this.bodyElement.removeEventListener("pointerout", this.pointeroutHander)
+    this.remove()
+    document.body.removeEventListener("pointerover", this.pointeroverHandler)
+    document.body.removeEventListener("pointerout", this.pointeroutHander)
 
   }
 }

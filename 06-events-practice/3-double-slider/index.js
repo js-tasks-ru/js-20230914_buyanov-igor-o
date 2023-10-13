@@ -1,27 +1,4 @@
-function createElementC(tag_name, class_info=undefined, attrs=undefined){
-    const element = document.createElement(tag_name)
-    if(class_info)
-    {
-      if(class_info instanceof Array){
-        element.classList.add(...class_info);
-      } else{
-        element.className = class_info;
-      }
-    }
-  
-    if(attrs){
-      for (const [key, value] of Object.entries(attrs)) {
-        element.setAttribute(key, value)
-      }
-    }
-    return element
-  }
-  
-  function templateToElement(template){
-    const element = document.createElement("div");
-    element.innerHTML = template;
-    return element.firstElementChild;
-  }
+import { createElementByTemplate } from "../../common/utils";
 
 export default class DoubleSlider {
 
@@ -40,11 +17,11 @@ export default class DoubleSlider {
         this.element.addEventListener("pointerup", this.pointerupHandler)
     }
 
-    sliderTemplate(){
+    createSliderByTemplate(){
         let min = this.formatValue(this.min), max = this.formatValue(this.max), left = 0, right = 0;
         if(this.selected){
-            left = this.getPercentage(this.selected.from, this.min, this.max)
-            right = this.getPercentage(this.selected.to, this.min, this.max)
+            left = this.getPercentageByNumber(this.selected.from, this.min, this.max)
+            right = this.getPercentageByNumber(this.selected.to, this.min, this.max)
             this.leftThumbPos = left;
             this.rightThumbPos = right;
             min = this.formatValue(this.selected.from)
@@ -74,12 +51,12 @@ export default class DoubleSlider {
       }
     }
 
-    getPercentage(curP, leftB, rightB){
-      return Number(((curP - leftB) * 100 / (rightB - leftB)).toFixed(0))
+    getPercentageByNumber(number, leftBound, rightBound){
+      return Number(((number - leftBound) * 100 / (rightBound - leftBound)).toFixed(0))
     }
 
-    getNumber(pec, leftB, rightB){
-      return Number(((rightB - leftB) * pec / 100 + leftB).toFixed(0))
+    getNumberByPercentage(percentage, leftBound, rightBound){
+      return Number(((rightBound - leftBound) * percentage / 100 + leftBound).toFixed(0))
     }
 
     movementHandler = e =>
@@ -88,15 +65,15 @@ export default class DoubleSlider {
       {     
         const {el, direction} = this.currentThumb
         const currPos = e.clientX
-        let newPos = this.getPercentage(currPos, this.leftBound, this.rightBound)
+        let newPos = this.getPercentageByNumber(currPos, this.leftBound, this.rightBound)
         let span;
         if(direction == "left"){
           newPos = newPos >= 0 ? newPos: 0;
           newPos = newPos <= (100 - this.rightThumbPos) ? newPos: (100 - this.rightThumbPos);
           this.leftThumbPos = newPos;
           span = this.element.querySelector('[data-element="from"]');
-          span.textContent = this.formatValue(this.getNumber(newPos, this.min, this.max))
-          this.selected.from = this.getNumber(newPos, this.min, this.max)
+          span.textContent = this.formatValue(this.getNumberByPercentage(newPos, this.min, this.max))
+          this.selected.from = this.getNumberByPercentage(newPos, this.min, this.max)
 
         } else {
           newPos = 100 - newPos;
@@ -104,8 +81,8 @@ export default class DoubleSlider {
           newPos = newPos <= (100 - this.leftThumbPos) ? newPos: (100 - this.leftThumbPos);
           this.rightThumbPos = newPos;
           span = this.element.querySelector('[data-element="to"]');
-          span.textContent = this.formatValue(this.getNumber(100 - newPos, this.min, this.max))
-          this.selected.to = this.getNumber(100 - newPos, this.min, this.max)
+          span.textContent = this.formatValue(this.getNumberByPercentage(100 - newPos, this.min, this.max))
+          this.selected.to = this.getNumberByPercentage(100 - newPos, this.min, this.max)
         }
         
         el.style[direction] = `${newPos}%`
@@ -137,11 +114,14 @@ export default class DoubleSlider {
     }
 
     render(){
-        this.element = templateToElement(this.sliderTemplate())
+        this.element = createElementByTemplate(this.createSliderByTemplate())
         
     }
 
     remove(){
+        this.element.removeEventListener("pointermove", this.movementHandler)
+        this.element.removeEventListener("pointerdown", this.pointerdownHandler)
+        this.element.removeEventListener("pointerup", this.pointerupHandler)
         this.element.remove()
     }
 
